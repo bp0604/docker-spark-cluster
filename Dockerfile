@@ -37,20 +37,20 @@ SPARK_WORKLOAD="master"
 
 EXPOSE 8080 7077 7000 22
 
-RUN sed -i -e 's/deb.debian.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apt/sources.list
-# RUN sed -i 's/PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
-RUN apt-get update && apt-get install -y openssh-server && service ssh start 
-# nvim ifconfig
+RUN sed -i -e 's/deb.debian.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apt/sources.list && \
+    sed -i 's/PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config && \
+    apt-get update && apt-get install -y openssh-server && service ssh start && \
+    echo 'root:mypassword' | chpasswd
+# nvim
 
 # RUN useradd -rm -d /home/ubuntu -s /bin/bash -g root -G sudo -u 1000 test 
 # RUN echo 'test:test' | chpasswd
 
-RUN useradd -m -s /bin/bash sshuser
-RUN echo "sshuser:Changeme" | changepasswd
-COPY config/id_rsa_pub_shared /home/sshuser/.ssh/authorized_keys
-RUN chown -R sshuser:sshuser /home/sshuser/.ssh
-RUN chmod 600 /home/sshuser/.ssh/authorized_keys
-# docker run -p 22:22 my-image:latest
+# RUN useradd -m -s /bin/bash sshuser
+# RUN echo "sshuser:Changeme" | changepasswd
+# COPY config/id_rsa_pub_shared /home/sshuser/.ssh/authorized_keys
+# RUN chown -R sshuser:sshuser /home/sshuser/.ssh
+# RUN chmod 600 /home/sshuser/.ssh/authorized_keys
 
 # RUN useradd -m user
 # RUN mkdir -p /home/user/.ssh
